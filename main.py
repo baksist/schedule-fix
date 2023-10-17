@@ -13,14 +13,22 @@ def read_cal():
 def clear_cal(cal: ics.Calendar):
     new_cal = ics.Calendar()
     for e in cal.events:
-        if not (e.name == "Практика" or e.name == "Военная кафедра"):
-            e.alarms[0].trigger = datetime.timedelta(minutes=-15)
-            new_cal.events.add(e)
+        if (e.name == "Библиотеки  машинного обучения (ПР)"):
+            e.end = e.end.shift(hours=+3, minutes=+40)
+            e.begin = e.begin.shift(hours=+3, minutes=+40)
+            e.location = "СДО"
+        if ("Интеллектуальные системы и технологии" in e.name or 
+            e.name == "Технологии обеспечения информационной безопасности (ПР)" or
+            e.name == "Технологии обеспечения информационной безопасности (ЛАБ)"):
+            e.location = "Discord"
+        if e.name == "Социология и педагогика высшей школы (ЛК)":
+            continue
+        new_cal.events.add(e)
     return new_cal
 
 
 if __name__ == '__main__':
     calendar = clear_cal(read_cal())
     out = open("new.ics", "w", encoding="utf-8")
-    out.write(str(calendar))
+    out.write(calendar.serialize())
     out.close()
